@@ -15,13 +15,13 @@ class TestModule(unittest.TestCase):
     def test_module_initialization(self):
         """Modules can be initialized with strings."""
         m = Module('foo')
-        assert unicode(m) == 'foo'
+        assert str(m) == 'foo'
 
         m = Module('foo.bar')
-        assert unicode(m) == 'foo.bar'
+        assert str(m) == 'foo.bar'
 
         m = Module('foo.bar.qux')
-        assert unicode(m) == 'foo.bar.qux'
+        assert str(m) == 'foo.bar.qux'
 
     def test_module_get_parent(self):
         """Parent modules can be accessed from any module."""
@@ -29,8 +29,8 @@ class TestModule(unittest.TestCase):
         assert m.parent_module is None
 
         m = Module('foo.bar')
-        assert unicode(m.parent_module) == 'foo'
+        assert str(m.parent_module) == 'foo'
 
         m = Module('foo.bar.qux')
-        assert unicode(m.parent_module) == 'foo.bar'
-        assert unicode(m.module_name) == 'qux'
+        assert str(m.parent_module) == 'foo.bar'
+        assert str(m.module_name) == 'qux'

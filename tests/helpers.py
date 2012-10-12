@@ -19,7 +19,7 @@ def create_dummy_file(filename, contents=''):
 
 def file_sha(filename):
     sha1 = hashlib.sha1()
-    with open(filename, 'r') as f:
+    with open(filename, 'rb') as f:
         sha1.update(f.read())
     return sha1.hexdigest()
 

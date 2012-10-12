@@ -2,6 +2,7 @@ import os
 import re
 from .helpers import touch_file, replace_extension
 from .commandline import info, warning
+from .compat import PY3, u
 
 
 module_name_re = re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$')
@@ -30,7 +31,7 @@ class Module(object):
 
     @property
     def module_path(self):
-        return '.'.join(self.components)
+        return u('.').join(self.components)
 
     @property
     def parent_components(self):
@@ -166,8 +167,12 @@ class Module(object):
 
     ##
     # Self-printing
-    def __unicode__(self):  # noqa
-        return u'%s' % (self.module_path,)
+    if not PY3:  # noqa
+        def __unicode__(self):
+            return self.module_path
 
-    def __str__(self):
-        return unicode(self).encode('utf-8')
+        def __str__(self):
+            return unicode(self).encode('utf-8')
+    else:
+        def __str__(self):  # noqa
+            return self.module_path
