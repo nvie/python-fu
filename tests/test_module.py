@@ -6,20 +6,11 @@ from python_fu.module import Module
 class TestModule(unittest.TestCase):
     def test_invalid_module_names(self):
         """Invalid module names raise Exceptions."""
-        with self.assertRaises(ValueError):
-            Module('')
-
-        with self.assertRaises(ValueError):
-            Module('names-with-dashes')
-
-        with self.assertRaises(ValueError):
-            Module('names with spaces')
-
-        with self.assertRaises(ValueError):
-            Module('names.with,punctuations!')
-
-        with self.assertRaises(ValueError):
-            Module('4names_starting_with_numbers')
+        self.assertRaises(ValueError, Module, '')
+        self.assertRaises(ValueError, Module, 'names-with-dashes')
+        self.assertRaises(ValueError, Module, 'names with spaces')
+        self.assertRaises(ValueError, Module, 'names.with,punctuations!')
+        self.assertRaises(ValueError, Module, '4names_starting_with_numbers')
 
     def test_module_initialization(self):
         """Modules can be initialized with strings."""

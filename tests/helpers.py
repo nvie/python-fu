@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, with_statement
 import os
 import hashlib
 import unittest
@@ -29,9 +29,11 @@ class SandboxedTestCase(unittest.TestCase):
         self.tmpdir = mkdtemp()
         self.cwd = os.getcwd()
         os.chdir(self.tmpdir)
-        self.addCleanup(os.chdir, self.cwd)
-        self.addCleanup(rmtree, self.tmpdir)
+
+    def tearDown(self):
+        os.chdir(self.cwd)
+        rmtree(self.tmpdir)
 
     def assertFileTree(self, list_of_files):
-        actual_file_list = list(walk_files())
-        self.assertItemsEqual(actual_file_list, list_of_files)
+        actual_file_list = sorted(walk_files())
+        assert actual_file_list == sorted(list_of_files)
