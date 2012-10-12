@@ -1,19 +1,6 @@
 from __future__ import absolute_import
-from .helpers import SandboxedTestCase
-import hashlib
+from .helpers import SandboxedTestCase, create_dummy_file, file_sha
 from python_fu.module import Module
-
-
-def create_dummy_file(filename, contents='print "Hello, world!"\n'):
-    with open(filename, 'w') as f:
-        f.write(contents)
-
-
-def file_sha(filename):
-    sha1 = hashlib.sha1()
-    with open(filename, 'r') as f:
-        sha1.update(f.read())
-    return sha1.hexdigest()
 
 
 class TestCreateModule(SandboxedTestCase):
