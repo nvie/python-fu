@@ -8,7 +8,8 @@ module_name_re = re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$')
 
 
 def valid_module_name(module_name):
-    return module_name_re.match(module_name)
+    return (module_name_re.match(module_name) and
+            not (module_name.startswith('__') and module_name.endswith('__')))  # exclude __init__ and __main__
 
 
 class Module(object):
@@ -22,9 +23,8 @@ class Module(object):
         components = module_path.split('.')
 
         # Sanity check
-        for module_path in components:
-            if not all([valid_module_name(mod) for mod in components]):
-                raise ValueError('Invalid module path: %s' % (module_path,))
+        if not all([valid_module_name(mod) for mod in components]):
+            raise ValueError('Invalid module path: %s' % (module_path,))
 
         self.components = components
 
