@@ -6,8 +6,6 @@ import os
 import re
 import argparse
 from python_fu.module import Module
-from python_fu.helpers import replace_extension
-from python_fu.commandline import info, error, warning, exit
 
 
 def parse_args():
@@ -20,44 +18,9 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # Sanity check first
     modules = map(Module, args.modules)
-
     for module in modules:
-        if module.is_module():
-            warning('%s is a non-package module already, skipping.' % (module,))
-            continue
-        elif not module.is_package():
-            warning('%s does not exist, skipping.' % (module,))
-            continue
-
-        module_file = module.module_file
-        package_file = module.package_file
-
-        # Sanity check: only allow demotes for packages that contain an
-        # __init__.py file, and nothing else
-        pkgdir = os.path.dirname(package_file)
-        files_in_pkgdir = set(os.listdir(pkgdir))
-        allowed_files = set(['__init__.py', '__init__.pyc', '__init__.pyo'])
-
-        superflous = files_in_pkgdir - allowed_files
-        if superflous:
-            warning('Directory %r is not empty. Cannot demote, skipping.' % (pkgdir,))
-            continue
-
-        #info('Found %s' % (module_file,))
-        info('Moving %s -> %s' % (package_file, module_file))
-        os.renames(package_file, module_file)
-
-        compiled_extensions = ['pyo', 'pyc']
-        for ext in compiled_extensions:
-            filename = replace_extension(package_file, ext)
-            if os.path.isfile(filename):
-                info('Cleaning up compiled module file %s' % (filename,))
-                os.remove(filename)
-
-        # Remove the package directory, if it's empty
-        os.rmdir(pkgdir)
+        module.demote()
 
 
 if __name__ == '__main__':

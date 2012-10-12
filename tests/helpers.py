@@ -12,7 +12,7 @@ def walk_files():
             yield os.path.normpath(os.path.join(root, file))
 
 
-def create_dummy_file(filename, contents='print "Hello, world!"\n'):
+def create_dummy_file(filename, contents=''):
     with open(filename, 'w') as f:
         f.write(contents)
 

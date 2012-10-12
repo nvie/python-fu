@@ -125,6 +125,44 @@ class Module(object):
                 info('Cleaning up compiled self file %s' % (filename,))
                 os.remove(filename)
 
+    def demote(self):
+        if self.is_module():
+            warning('%s is a non-package module already, skipping.' % (self,))
+            return
+
+        if not self.is_package():
+            warning('%s does not exist, skipping.' % (self,))
+            return
+
+        module_file = self.module_file
+        package_file = self.package_file
+
+        # Sanity check: only allow demotes for packages that contain an
+        # __init__.py file, and nothing else
+        pkgdir = os.path.dirname(package_file)
+        package_files = set(os.listdir(pkgdir))
+        allowed_junk = set(['__init__.pyc', '__init__.pyo', '.DS_Store'])
+
+        superflous = package_files - allowed_junk - set(['__init__.py'])
+        if superflous:
+            warning('Directory %r is not empty. Cannot demote, skipping.' % (pkgdir,))
+            for file in superflous:
+                warning('- %s' % (file,))
+            return
+
+        for junkfile in allowed_junk:
+            junkfile = os.path.join(pkgdir, junkfile)
+            if os.path.isfile(junkfile):
+                info('Cleaning up compiled module file %s' % (junkfile,))
+                os.remove(junkfile)
+
+        #info('Found %s' % (module_file,))
+        info('Moving %s -> %s' % (package_file, module_file))
+        os.rename(package_file, module_file)
+
+        # Remove the package directory, if it's empty
+        os.rmdir(pkgdir)
+
 
     ##
     # Self-printing

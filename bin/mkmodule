@@ -20,9 +20,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # Sanity check first
     modules = map(Module, sorted(args.modules))
-
     for module in modules:
         if module.exists():
             warning('%s already exists, skipping.' % (module,))
