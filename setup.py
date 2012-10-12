@@ -21,7 +21,12 @@ setup(
     author_email='vincent@3rdcloud.com',
     description=__doc__,
     packages=find_packages(),
-    scripts=['bin/promote', 'bin/demote', 'bin/mkmodule'],
+    entry_points='''\
+    [console_scripts]
+    promote = python_fu.commands.promote:main
+    demote = python_fu.commands.demote:main
+    mkmodule = python_fu.commands.mkmodule:main
+    ''',
     #include_package_data=True,
     zip_safe=False,
     platforms='any',

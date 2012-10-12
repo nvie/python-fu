@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
 
-import sys
-import os
-import re
 import argparse
 from python_fu.module import Module
 
