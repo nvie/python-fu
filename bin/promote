@@ -7,8 +7,7 @@ import re
 import argparse
 
 from python_fu.module import Module
-from python_fu.helpers import replace_extension
-from python_fu.commandline import info, error, warning, exit
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -22,26 +21,7 @@ def main():
 
     modules = map(Module, args.modules)
     for module in modules:
-        if module.is_package():
-            warning('%s is a package already, skipping.' % (module,))
-            continue
-        elif not module.is_module():
-            warning('%s does not exist, skipping.' % (module,))
-            continue
-
-        module_file = module.module_file
-        package_file = module.package_file
-
-        #info('Found %s' % (module_file,))
-        info('Moving %s -> %s' % (module_file, package_file))
-        os.renames(module_file, package_file)
-
-        compiled_extensions = ['pyo', 'pyc']
-        for ext in compiled_extensions:
-            filename = replace_extension(module_file, ext)
-            if os.path.isfile(filename):
-                info('Cleaning up compiled module file %s' % (filename,))
-                os.remove(filename)
+        module.promote()
 
 
 if __name__ == '__main__':

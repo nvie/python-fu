@@ -1,5 +1,7 @@
 import os
 import re
+from .helpers import touch_file, replace_extension
+from .commandline import info, warning
 
 
 module_name_re = re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$')
@@ -27,17 +29,27 @@ class Module(object):
         self.components = components
 
     @property
-    def parents(self):
+    def module_path(self):
+        return '.'.join(self.components)
+
+    @property
+    def parent_components(self):
         if len(self.components) <= 1:
             return []
         return self.components[:-1]
+
+    @property
+    def parent_module(self):
+        if len(self.components) <= 1:
+            return None
+        return Module('.'.join(self.components[:-1]))
 
     @property
     def module_name(self):
         return self.components[-1]
 
     def split(self):
-        return (self.parents, self.module_name)
+        return (self.parent_components, self.module_name)
 
     @property
     def module_file(self):
@@ -45,9 +57,19 @@ class Module(object):
         return os.path.join(*parents + [last + '.py'])
 
     @property
+    def module_dir(self):
+        parent = self.parent_module
+        if not parent:
+            return '.'
+        return parent.package_dir
+
+    @property
     def package_file(self):
-        parents, last = self.split()
-        return os.path.join(*parents + [os.path.join(last, '__init__.py')])
+        return os.path.join(self.package_dir, '__init__.py')
+
+    @property
+    def package_dir(self):
+        return os.path.join(*self.components)
 
     def is_package(self):
         return os.path.isfile(self.package_file)
@@ -55,14 +77,59 @@ class Module(object):
     def is_module(self):
         return os.path.isfile(self.module_file)
 
+    def exists(self):
+        return self.is_package() or self.is_module()
+
+    def create(self, promote=False):
+        parent_module = self.parent_module
+        if parent_module:
+            parent_module.create(promote=True)
+
+        if self.exists():
+            # This module exists already, so we're done, unless we need to
+            # promote it now.
+            if not self.is_package() and promote:
+                self.promote()
+
+            return
+
+        # If it does not exist, we need to create it now.  We may assume the
+        # parent directory exists by now.
+        if not os.path.exists(self.module_file):
+            touch_file(self.module_file)
+
+        # It's a bit of a short-hand, but it works for now
+        if promote:
+            self.promote()
+
+    def promote(self):
+        if self.is_package():
+            warning('%s is a package already, skipping.' % (self,))
+            return
+
+        if not self.is_module():
+            warning('%s does not exist, skipping.' % (self,))
+            return
+
+        module_file = self.module_file
+        package_file = self.package_file
+
+        #info('Found %s' % (module_file,))
+        info('Promoting %s -> %s' % (module_file, package_file))
+        os.renames(module_file, package_file)
+
+        compiled_extensions = ['pyo', 'pyc']
+        for ext in compiled_extensions:
+            filename = replace_extension(module_file, ext)
+            if os.path.isfile(filename):
+                info('Cleaning up compiled self file %s' % (filename,))
+                os.remove(filename)
+
 
     ##
     # Self-printing
     def __unicode__(self):  # noqa
-        return u'Module %s' % (u'.'.join(self.components,))
-
-    def __repr__(self):
-        return 'Module(%r)' % (self.components,)
+        return u'%s' % (self.module_path,)
 
     def __str__(self):
         return unicode(self).encode('utf-8')
