@@ -153,7 +153,7 @@ class Module(object):
         for junkfile in allowed_junk:
             junkfile = os.path.join(pkgdir, junkfile)
             if os.path.isfile(junkfile):
-                info('Cleaning up compiled module file %s' % (junkfile,))
+                info('Cleaning up junk file %s' % (junkfile,))
                 os.remove(junkfile)
 
         #info('Found %s' % (module_file,))

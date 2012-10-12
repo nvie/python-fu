@@ -13,6 +13,8 @@ from python_fu.commandline import info, error, warning, exit
 def parse_args():
     parser = argparse.ArgumentParser(
             description='Creates directory structures for Python packages.')
+    parser.add_argument('--promote', '-p', action='store_true', default=False,
+            help='Immediately promote the new module to a package.')
     parser.add_argument('modules', nargs='+')
     return parser.parse_args()
 
@@ -27,7 +29,7 @@ def main():
             continue
 
         info('Creating %s' % (module.module_file,))
-        module.create()
+        module.create(args.promote)
 
 
 if __name__ == '__main__':
