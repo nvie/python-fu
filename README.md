@@ -1,5 +1,5 @@
-Useful shell extensions for Python developers
-=============================================
+python-fu: Useful shell scripts for Python devs
+===============================================
 
 Create dir structures for your modules easily:
 
