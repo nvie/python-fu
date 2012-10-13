@@ -17,3 +17,20 @@ class TestCreateModule(SandboxedTestCase):
 
         Module('foo.bar').create()
         self.assertFileTree(['foo/__init__.py', 'foo/bar.py', 'bar.py', 'qux/__init__.py'])
+
+    def test_create_dash_p(self):
+        """Create with promote option "just promoted" when module already exists."""
+
+        # Setup, let's create a simple module
+        Module('foo.bar.qux').create()
+        self.assertFileTree([
+            'foo/__init__.py',
+            'foo/bar/__init__.py',
+            'foo/bar/qux.py'])
+
+        # If we now "mkmodule -p foo.bar.qux", qux should simply be promoted
+        Module('foo.bar.qux').create(promote=True)
+        self.assertFileTree([
+            'foo/__init__.py',
+            'foo/bar/__init__.py',
+            'foo/bar/qux/__init__.py'])
