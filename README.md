@@ -39,3 +39,12 @@ Safety first
 
 These commands will never cause any data loss.
 
+
+Installation
+============
+
+You can use `pip` to install python-fu:
+
+```console
+$ pip install python-fu
+```
