@@ -11,6 +11,7 @@ class TestModule(unittest.TestCase):
         self.assertRaises(ValueError, Module, 'names with spaces')
         self.assertRaises(ValueError, Module, 'names.with,punctuations!')
         self.assertRaises(ValueError, Module, '4names_starting_with_numbers')
+        self.assertRaises(ValueError, Module, 'names.with.reserved.keywords')
 
     def test_module_initialization(self):
         """Modules can be initialized with strings."""
