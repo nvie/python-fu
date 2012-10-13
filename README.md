@@ -1,6 +1,8 @@
 python-fu: Useful shell scripts for Python devs
 ===============================================
 
+[![Build status](https://travis-ci.org/nvie/python-fu.png)](https://travis-ci.org/nvie/python-fu)
+
 Create dir structures for your modules easily:
 
     $ mkmodule foo.bar.qux
