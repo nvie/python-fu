@@ -1,10 +1,10 @@
 import os
 import re
 from keyword import iskeyword
-from .helpers import touch_file, replace_extension
+
 from .commandline import info, warning
 from .compat import PY3, u
-
+from .helpers import replace_extension, touch_file
 
 module_name_re = re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$')
 
@@ -27,7 +27,7 @@ class Module(object):
 
         # Sanity check
         if not all([valid_module_name(mod) for mod in components]):
-            raise ValueError('Invalid module path: %s' % (module_path,))
+            raise ValueError('Invalid module path: {}'.format(module_path))
 
         self.components = components
 
@@ -107,34 +107,33 @@ class Module(object):
 
     def promote(self):
         if self.is_package():
-            warning('%s is a package already, skipping.' % (self,))
+            warning('{} is a package already, skipping.'.format(self))
             return
 
         if not self.is_module():
-            warning('%s does not exist, skipping.' % (self,))
+            warning('{} does not exist, skipping.'.format(self))
             return
 
         module_file = self.module_file
         package_file = self.package_file
 
-        #info('Found %s' % (module_file,))
-        info('Promoting %s -> %s' % (module_file, package_file))
+        info('Promoting {} -> {}'.format(module_file, package_file))
         os.renames(module_file, package_file)
 
         compiled_extensions = ['pyo', 'pyc']
         for ext in compiled_extensions:
             filename = replace_extension(module_file, ext)
             if os.path.isfile(filename):
-                info('Cleaning up compiled self file %s' % (filename,))
+                info('Cleaning up compiled self file {}'.format(filename))
                 os.remove(filename)
 
     def demote(self):
         if self.is_module():
-            warning('%s is a non-package module already, skipping.' % (self,))
+            warning('{} is a non-package module already, skipping.'.format(self))
             return
 
         if not self.is_package():
-            warning('%s does not exist, skipping.' % (self,))
+            warning('{} does not exist, skipping.'.format(self))
             return
 
         module_file = self.module_file
@@ -148,26 +147,23 @@ class Module(object):
 
         superflous = package_files - allowed_junk - set(['__init__.py'])
         if superflous:
-            warning('Directory %r is not empty. Cannot demote, skipping.' % (pkgdir,))
+            warning('Directory {!r} is not empty. Cannot demote, skipping.'.format(pkgdir))
             for file in superflous:
-                warning('- %s' % (file,))
+                warning('- {}'.format(file))
             return
 
         for junkfile in allowed_junk:
             junkfile = os.path.join(pkgdir, junkfile)
             if os.path.isfile(junkfile):
-                info('Cleaning up junk file %s' % (junkfile,))
+                info('Cleaning up junk file {}'.format(junkfile))
                 os.remove(junkfile)
 
-        #info('Found %s' % (module_file,))
-        info('Moving %s -> %s' % (package_file, module_file))
+        info('Moving {} -> {}'.format(package_file, module_file))
         os.rename(package_file, module_file)
 
         # Remove the package directory, if it's empty
         os.rmdir(pkgdir)
 
-
-    ##
     # Self-printing
     if not PY3:  # noqa
         def __unicode__(self):

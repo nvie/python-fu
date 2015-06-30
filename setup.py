@@ -1,15 +1,7 @@
 """
 python-fu: Python command line tools, for increased fu.
 """
-import sys
 from setuptools import setup, find_packages
-
-
-def get_dependencies():
-    deps = []
-    if sys.version_info < (2, 7):
-        deps += ['argparse']
-    return deps
 
 
 setup(
@@ -23,14 +15,14 @@ setup(
     packages=find_packages(),
     entry_points='''\
     [console_scripts]
-    promote = python_fu.commands.promote:main
-    demote = python_fu.commands.demote:main
-    mkmodule = python_fu.commands.mkmodule:main
+    promote = python_fu.commands.promote:cli
+    demote = python_fu.commands.demote:cli
+    mkmodule = python_fu.commands.mkmodule:cli
     ''',
-    #include_package_data=True,
+    # include_package_data=True,
     zip_safe=False,
     platforms='any',
-    install_requires=get_dependencies(),
+    install_requires=['click >= 4.0'],
     classifiers=[
         # As from http://pypi.python.org/pypi?%3Aaction=list_classifiers
         #'Development Status :: 1 - Planning',

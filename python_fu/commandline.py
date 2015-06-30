@@ -1,17 +1,18 @@
 import sys
 
+import click
+
 
 def info(msg):
-    sys.stdout.write('%s\n' % (msg,))
-    sys.stdout.flush()
+    click.echo(msg)
+
+
+def warning(msg):
+    click.secho(msg, fg='yellow', file=sys.stderr)
 
 
 def error(msg):
-    sys.stderr.write('%s\n' % (msg,))
-    sys.stderr.flush()
-
-
-warning = error
+    click.secho(msg, fg='red', file=sys.stderr)
 
 
 def exit(msg, exitcode=1):
