@@ -1,8 +1,16 @@
 """
 python-fu: Python command line tools, for increased fu.
 """
-from setuptools import setup, find_packages
+import sys
 
+from setuptools import find_packages, setup
+
+
+def get_dependencies():
+    dependencies = ['click >= 4.0', 'more_itertools']
+    if sys.version_info < (3, 0):
+        dependencies += ['pathlib']
+    return dependencies
 
 setup(
     name='python-fu',
@@ -18,11 +26,12 @@ setup(
     promote = python_fu.commands.promote:cli
     demote = python_fu.commands.demote:cli
     mkmodule = python_fu.commands.mkmodule:cli
+    lsmodules = python_fu.commands.lsmodules:cli
     ''',
     # include_package_data=True,
     zip_safe=False,
     platforms='any',
-    install_requires=['click >= 4.0'],
+    install_requires=get_dependencies(),
     classifiers=[
         # As from http://pypi.python.org/pypi?%3Aaction=list_classifiers
         #'Development Status :: 1 - Planning',
