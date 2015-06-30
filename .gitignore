@@ -1,2 +1,7 @@
 *.pyc
-/.tox
+
+build/
+dist/
+.tox/
+.direnv/
+*.egg-info/
