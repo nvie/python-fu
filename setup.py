@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='python-fu',
-    version='0.1',
+    version='0.2',
     url='https://github.com/nvie/python-fu/',
     license='BSD',
     author='Vincent Driessen',
