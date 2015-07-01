@@ -14,7 +14,7 @@ def get_dependencies():
 
 setup(
     name='python-fu',
-    version='0.2',
+    version='0.2.1',
     url='https://github.com/nvie/python-fu/',
     license='BSD',
     author='Vincent Driessen',
