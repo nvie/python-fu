@@ -1,7 +1,7 @@
 all:
 
 clean:
-	rm -rf build/ dist/
+	rm -rf build/ dist/ python_fu.egg-info/
 
 release: clean
 	# Check if latest tag is the current head we're releasing
