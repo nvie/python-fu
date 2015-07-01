@@ -33,7 +33,7 @@ def iter_imported_modules_from_file(python_file):
 
 def iter_imported_modules(paths):
     for python_file in walk_python_files(*paths):
-        for mod in sorted(unique_everseen(iter_imported_modules_from_file(python_file))):
+        for mod in unique_everseen(iter_imported_modules_from_file(python_file)):
             yield mod
 
 
@@ -41,7 +41,7 @@ def iter_imported_modules(paths):
 @click.argument('paths', nargs=-1)
 def cli(paths):
     """Lists all module names that are imported anywhere in the given paths"""
-    for mod in sorted(unique_everseen(iter_imported_modules(paths))):
+    for mod in sorted(iter_imported_modules(paths)):
         print(mod)
 
 
