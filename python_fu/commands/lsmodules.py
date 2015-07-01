@@ -33,7 +33,7 @@ def iter_imported_modules_from_file(python_file):
 
 def iter_imported_modules(paths):
     for python_file in walk_python_files(*paths):
-        for mod in unique_everseen(iter_imported_modules_from_file(python_file)):
+        for mod in filter(None, unique_everseen(iter_imported_modules_from_file(python_file))):
             yield mod
 
 
